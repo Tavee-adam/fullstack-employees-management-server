@@ -23,7 +23,6 @@ export class EmployeeService {
 
   async findAll() {
     try {
-      console.log('1');
       return await this.employeeRepository.find();
     } catch (error) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
@@ -98,10 +97,11 @@ export class EmployeeService {
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
     try {
       const employee = await this.employeeRepository.findOne({ where: { id } });
-      const updater = this.employeeRepository.merge(
+      const updater = await this.employeeRepository.merge(
         employee,
         updateEmployeeDto,
       );
+
       return await this.employeeRepository.save(updater);
     } catch (error) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
@@ -112,6 +112,7 @@ export class EmployeeService {
     try {
       const employee = await this.employeeRepository.findOne({ where: { id } });
       const isremove = await this.employeeRepository.remove(employee);
+      console.log(isremove, '<<< DELETE ');
       return isremove;
     } catch (error) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);

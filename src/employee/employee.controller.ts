@@ -17,28 +17,13 @@ export class EmployeeController {
 
   @Post()
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
+    console.log(createEmployeeDto, '<<< 20');
     return this.employeeService.create(createEmployeeDto);
   }
 
   @Get()
-  findAll(
-    @Body()
-    req: {
-      isSelectBirthDate: boolean; // user choose only birth month
-      isSelectIdExpire: boolean; // user choose 
-      
-      month: number | null;
-    },
-  ) {
-    if (!req.isSelectBirthDate && !req.isSelectIdExpire) {
-      return this.employeeService.findAll();
-    } else if (req.isSelectBirthDate && !req.isSelectIdExpire) {
-      return this.employeeService.findManyByBirthMonth(req.month);
-    } else if (!req.isSelectBirthDate && req.isSelectIdExpire) {
-      return this.employeeService.findManyByIdCardExpired();
-    } else if (req.isSelectBirthDate && req.isSelectIdExpire) {
-      return this.employeeService.findManyByBirthAndIdCardExpired(req.month);
-    }
+  findAll() {
+    return this.employeeService.findAll();
   }
 
   @Get()
@@ -52,15 +37,16 @@ export class EmployeeController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    return this.employeeService.update(+id, updateEmployeeDto);
+    return await this.employeeService.update(+id, updateEmployeeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.employeeService.remove(+id);
+    const numberId = parseInt(id);
+    return this.employeeService.remove(+numberId);
   }
 }

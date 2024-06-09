@@ -1,5 +1,5 @@
 
-# Click to visit api server
+# Click to visit client repo
 https://github.com/Tavee-adam/fullstack-employees-management
 
 
