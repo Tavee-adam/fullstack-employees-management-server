@@ -12,16 +12,15 @@ export class EmployeeService {
     @InjectRepository(Employee)
     private employeeRepository: Repository<Employee>,
   ) {}
-  async create(createEmployeeDto: CreateEmployeeDto) {
+  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
     try {
       return await this.employeeRepository.save(createEmployeeDto);
     } catch (error) {
-      console.log(error);
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<Employee[]> {
     try {
       return await this.employeeRepository.find();
     } catch (error) {
@@ -31,7 +30,6 @@ export class EmployeeService {
 
   async findManyByBirthMonth(month: number): Promise<Employee[]> {
     try {
-      console.log('2');
       return this.employeeRepository
         .createQueryBuilder('employee')
         .where('Month(employee.birth) = :month', { month })
@@ -85,7 +83,7 @@ export class EmployeeService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Employee | null> {
     try {
       const employee = await this.employeeRepository.findOne({ where: { id } });
       return employee;
@@ -94,25 +92,26 @@ export class EmployeeService {
     }
   }
 
-  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+  async update(
+    id: number,
+    updateEmployeeDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
     try {
       const employee = await this.employeeRepository.findOne({ where: { id } });
-      const updater = await this.employeeRepository.merge(
+      const updater = this.employeeRepository.merge(
         employee,
         updateEmployeeDto,
       );
-
       return await this.employeeRepository.save(updater);
     } catch (error) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Employee> {
     try {
       const employee = await this.employeeRepository.findOne({ where: { id } });
       const isremove = await this.employeeRepository.remove(employee);
-      console.log(isremove, '<<< DELETE ');
       return isremove;
     } catch (error) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
