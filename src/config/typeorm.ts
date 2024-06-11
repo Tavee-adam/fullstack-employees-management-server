@@ -1,0 +1,23 @@
+import { registerAs } from '@nestjs/config';
+import { config as dotenvConfig } from 'dotenv';
+import { DataSource, DataSourceOptions } from 'typeorm';
+// import { Employee } from '../employee/entities/employee.entity';
+
+dotenvConfig({ path: '.env' });
+
+const config = {
+  type: 'mysql',
+  host: `${process.env.DATABASE_HOST}`,
+  port: `${process.env.DATABASE_PORT}`,
+  username: `${process.env.DATABASE_USERNAME}`,
+  password: `${process.env.DATABASE_PASSWORD}`,
+  database: `${process.env.DATABASE_DBNAME}`,
+  entities: [`dist/**/*.entity{.ts,.js}`],
+  migrations: ['dist/migrations/*{.ts,.js}'],
+  //   migrations: [`../migrations/*{.ts,.js}`],
+  autoLoadEntities: true,
+  synchronize: false,
+};
+
+export default registerAs('typeorm', () => config);
+export const connectionSource = new DataSource(config as DataSourceOptions);
