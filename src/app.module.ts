@@ -5,10 +5,10 @@ import { EmployeeModule } from './employee/employee.module';
 // import { Employee } from './employee/entities/employee.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmployeeSeederModule } from './employee-seeder/employee-seeder.module';
 import typeorm from './config/typeorm';
 @Module({
   imports: [
-    EmployeeModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
@@ -19,6 +19,8 @@ import typeorm from './config/typeorm';
         configService.get('typeorm'),
       inject: [ConfigService],
     }),
+    EmployeeModule,
+    EmployeeSeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],

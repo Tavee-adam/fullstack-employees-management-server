@@ -92,6 +92,21 @@ export class EmployeeService {
     }
   }
 
+  async findOneByFirstandLastname(
+    firstname: string,
+    lastname: string,
+  ): Promise<Employee | null> {
+    try {
+      const employee = await this.employeeRepository.findOne({
+        where: { firstname, lastname },
+      });
+
+      return employee;
+    } catch (error) {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async update(
     id: number,
     updateEmployeeDto: UpdateEmployeeDto,
